@@ -9,7 +9,7 @@ from PIL import Image, ImageFilter
 import torchvision.transforms.functional as TF
 import torchvision.utils as vutils
 from torchmetrics.image import PeakSignalNoiseRatio, StructuralSimilarityIndexMeasure
-from fusionSR_model import FusionSR
+from model.fusionSR_model import FusionSR
 import random
 
 
@@ -33,7 +33,7 @@ class CELoss(nn.Module):
 
 
 # ==========================================
-# 2. 医学图像数据集
+# 2. 数据集
 # ==========================================
 class MedicalDataset(Dataset):
     """
@@ -131,13 +131,13 @@ class MedicalDataset(Dataset):
 
 
 # ==========================================
-# 3. 训练主函数
+# 3. 训练
 # ==========================================
 def main():
     # --- 路径配置 ---
     train_dir       = '/root/autodl-tmp/CDDFuse/datasets_fusion/train'
     val_dir         = '/root/autodl-tmp/CDDFuse/datasets_fusion/test'
-    save_base_dir   = 'twopaper_moe2'
+    save_base_dir   = 'twoscales'
     best_img_dir    = os.path.join(save_base_dir, 'best_epoch_images')
 
     os.makedirs(save_base_dir, exist_ok=True)
@@ -146,7 +146,7 @@ def main():
     print(f"使用设备: {device}")
 
     # --- 超参数 ---
-    epochs      = 500
+    epochs      = 200
     batch_size  = 4
     lr_rate     = 1e-4
     scale       = 2
@@ -180,7 +180,7 @@ def main():
             writer = csv.writer(f)
             writer.writerow(['Epoch', 'Loss', 'Train_PSNR', 'Train_SSIM', 'Val_PSNR', 'Val_SSIM'])
 
-    # --- 断点续训（可选）---
+    # --- 断点续训---
     ckpt_path = os.path.join(save_base_dir, 'latest.pth')
     start_epoch = 0
     best_psnr = 0.0
@@ -273,7 +273,7 @@ def main():
                     sr_save = torch.clamp(model(lr1, lr2, lr3), 0, 1)
                     vutils.save_image(sr_save, os.path.join(best_img_dir, fname[0]))
 
-        # --- 保存最新模型（断点） ---
+        # --- 保存最新模型---
         torch.save({
             'epoch': epoch + 1,
             'model': model.state_dict(),
