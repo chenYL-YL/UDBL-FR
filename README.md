@@ -1,4 +1,5 @@
 # UDBL-FR
+This is the official implementation of the paper "Unified Dual-Branch Learning for Tri-Modal Medical Image Fusion and High-Resolution Reconstruction", submitted to *The Visual Computer*. If you find this code useful in your research, please cite our paper:
 
 ## 1. Environment 
 
