@@ -150,7 +150,7 @@ def main():
     batch_size  = 4
     lr_rate     = 1e-4
     scale       = 2
-    beta        = 0.5  # CELoss 权重
+    beta        = 0.1  # CELoss 权重
 
     # --- 数据加载 ---
     train_loader = DataLoader(
